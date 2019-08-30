@@ -35,10 +35,11 @@ describe Oystercard do
     expect {subject.touch_in(:entry_station)}.to raise_error ("insufficient funds")
   end
 
-  it 'it stores #touch_in station' do
-    subject.top_up(20)
-    expect(subject.touch_in(:entry_station)).to eq ([:entry_station])
-  end
+  # it 'it stores #touch_in station' do
+  #   subject.top_up(20)
+  #   subject.touch_in(:entry_station)
+  #   expect(subject.trip_history).to include(:entry_station)
+  # end
 
   # it 'on #touch_out entry_station is set to nil' do
   #   subject.top_up(20)
@@ -58,13 +59,12 @@ describe Oystercard do
   it 'stores entry station to trip history during touch in' do
     subject.top_up(Oystercard::LIMIT)
     subject.touch_in(:entry_station)
-    expect(subject.trip_history).to eq([:entry_station])
+    expect(subject.trip_history).to include(:entry_station)
   end
 
   it 'stores exit station to trip history during touch out' do
     subject.top_up(Oystercard::LIMIT)
     subject.touch_in(:entry_station)
-    subject.touch_out(:exit_station)
-    expect(subject.trip_history).to eq([:entry_station, :exit_station])
+    expect(subject.touch_out(:exit_station)).to eq (subject.trip_history[:entry_station])
   end
 end
